@@ -157,3 +157,91 @@ You should also investigate **what's writing "N/A"** to `cdm_scuba_m365_result_t
 Fixing the source would be ideal, but the ingest pipeline ensures your transform stays resilient even if bad data slips through.
 
 **Bottom line: Do both the update_by_query AND the ingest pipeline fix for complete protection.**
+
+
+
+
+
+
+
+***
+**The fact that the update_by_query FAILED proves the "N/A" values ARE there** - Elasticsearch couldn't even run the query because it tried to parse "N/A" as a date!
+
+Here's the fix: **Use `match_all` and let the script do the filtering**:
+
+## Solution: Update ALL documents, script filters for "N/A"
+
+```json
+POST .ds-cdm_scuba_m365_result_trending-2025.12.08-000024,
+     .ds-cdm_scuba_m365_result_trending-2025.12.10-000025,
+     .ds-cdm_scuba_m365_result_trending-2025.12.10-000026/_update_by_query?conflicts=proceed&wait_for_completion=false
+{
+  "script": {
+    "source": """
+      if (ctx._source.control?.resolution_date != null) {
+        String val = ctx._source.control.resolution_date.toString();
+        if (val == 'N/A' || val == '' || val.trim() == '') {
+          ctx._source.control.resolution_date = null;
+        }
+      }
+    """,
+    "lang": "painless"
+  },
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
+**What this does:**
+- Scans **every** document in those 3 indices
+- Checks each document's `_source` (raw data, no parsing)
+- Only updates documents where `control.resolution_date` is "N/A" or empty
+- Leaves valid dates completely untouched
+- Returns immediately with a task ID (runs in background)
+
+## Check progress:
+
+```json
+GET _tasks?detailed=true&actions=*byquery
+```
+
+## Alternative: If the above is too slow, target by date range
+
+If you know roughly when the bad data arrived:
+
+```json
+POST .ds-cdm_scuba_m365_result_trending-2025.12.08-000024,
+     .ds-cdm_scuba_m365_result_trending-2025.12.10-000025,
+     .ds-cdm_scuba_m365_result_trending-2025.12.10-000026/_update_by_query?conflicts=proceed
+{
+  "script": {
+    "source": """
+      if (ctx._source.control?.resolution_date != null) {
+        String val = ctx._source.control.resolution_date.toString();
+        if (val == 'N/A' || val == '' || val.trim() == '') {
+          ctx._source.control.resolution_date = null;
+        }
+      }
+    """
+  },
+  "query": {
+    "range": {
+      "@timestamp": {
+        "gte": "2025-12-08",
+        "lte": "2025-12-11"
+      }
+    }
+  }
+}
+```
+
+## After it completes:
+
+```json
+POST _transform/cdm_scuba_m365_result/_stop
+POST _transform/cdm_scuba_m365_result/_reset
+POST _transform/cdm_scuba_m365_result/_start
+```
+
+**Key insight:** We can't FIND the documents with normal queries, but `match_all` + script filtering will UPDATE them successfully. Try this and let me know the result!
