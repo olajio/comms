@@ -1,0 +1,74 @@
+{
+  "count": 1,
+  "transforms": [
+    {
+      "id": "cdm_scuba_m365_result",
+      "state": "failed",
+      "reason": "Failed to index documents into destination index due to permanent error: [org.elasticsearch.xpack.transform.transforms.BulkIndexingException: Bulk index experienced [50] failures and at least 1 irrecoverable [org.elasticsearch.xpack.transform.transforms.TransformException: Destination index mappings are incompatible with the transform configuration.; org.elasticsearch.index.mapper.DocumentParsingException: [1:733] failed to parse field [control.resolution_date] of type [date] in document with id 'TQAyX367H8rLew5F05CihqdOeAAAAAAA'. Preview of field's value: 'N/A'; java.lang.IllegalArgumentException: failed to parse date field [N/A] with format [strict_date_optional_time||epoch_millis]].; org.elasticsearch.xpack.transform.transforms.TransformException: Destination index mappings are incompatible with the transform configuration.; org.elasticsearch.index.mapper.DocumentParsingException: [1:733] failed to parse field [control.resolution_date] of type [date] in document with id 'TQAyX367H8rLew5F05CihqdOeAAAAAAA'. Preview of field's value: 'N/A'; java.lang.IllegalArgumentException: failed to parse date field [N/A] with format [strict_date_optional_time||epoch_millis]]",
+      "node": {
+        "id": "360xr3tYTqOG2R-xOaUzQw",
+        "name": "instance-0000000166",
+        "ephemeral_id": "kJaMN7CzR_uVZZAqhoGUNw",
+        "transport_address": "10.170.195.94:19214",
+        "attributes": {}
+      },
+      "stats": {
+        "pages_processed": 6,
+        "documents_processed": 133429,
+        "documents_indexed": 25000,
+        "documents_deleted": 0,
+        "trigger_count": 1,
+        "index_time_in_ms": 4865,
+        "index_total": 5,
+        "index_failures": 1,
+        "search_time_in_ms": 1936,
+        "search_total": 6,
+        "search_failures": 0,
+        "processing_time_in_ms": 572,
+        "processing_total": 6,
+        "delete_time_in_ms": 0,
+        "exponential_avg_checkpoint_duration_ms": 0,
+        "exponential_avg_documents_indexed": 0,
+        "exponential_avg_documents_processed": 0
+      },
+      "checkpointing": {
+        "last": {
+          "checkpoint": 0
+        },
+        "next": {
+          "checkpoint": 1,
+          "position": {
+            "indexer_position": {
+              "control.id": "MS.TEAMS.7.1v1",
+              "scan.date": 1757446069724,
+              "tenant.id": "0d69cd8a-9e12-4d21-95f0-b4406e06710a"
+            }
+          },
+          "checkpoint_progress": {
+            "docs_remaining": 72984,
+            "total_docs": 206413,
+            "percent_complete": 64.64176190453121,
+            "docs_indexed": 30000,
+            "docs_processed": 133429
+          },
+          "timestamp_millis": 1765482843940,
+          "time_upper_bound_millis": 1765482783940
+        },
+        "changes_last_detected_at": 1765482843936,
+        "last_search_time": 1765482843936
+      },
+      "health": {
+        "status": "red",
+        "issues": [
+          {
+            "type": "transform_task_failed",
+            "issue": "Transform task state is [failed]",
+            "details": "Failed to index documents into destination index due to permanent error: [org.elasticsearch.xpack.transform.transforms.BulkIndexingException: Bulk index experienced [50] failures and at least 1 irrecoverable [org.elasticsearch.xpack.transform.transforms.TransformException: Destination index mappings are incompatible with the transform configuration.; org.elasticsearch.index.mapper.DocumentParsingException: [1:733] failed to parse field [control.resolution_date] of type [date] in document with id 'TQAyX367H8rLew5F05CihqdOeAAAAAAA'. Preview of field's value: 'N/A'; java.lang.IllegalArgumentException: failed to parse date field [N/A] with format [strict_date_optional_time||epoch_millis]].; org.elasticsearch.xpack.transform.transforms.TransformException: Destination index mappings are incompatible with the transform configuration.; org.elasticsearch.index.mapper.DocumentParsingException: [1:733] failed to parse field [control.resolution_date] of type [date] in document with id 'TQAyX367H8rLew5F05CihqdOeAAAAAAA'. Preview of field's value: 'N/A'; java.lang.IllegalArgumentException: failed to parse date field [N/A] with format [strict_date_optional_time||epoch_millis]]",
+            "count": 1,
+            "first_occurrence": 1765482852273
+          }
+        ]
+      }
+    }
+  ]
+}
